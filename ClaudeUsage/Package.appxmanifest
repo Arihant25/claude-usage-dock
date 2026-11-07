@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 uap5 rescap">
+
+  <Identity
+    Name="ClaudeUsageDock"
+    Publisher="CN=Arihant25"
+    Version="0.0.1.0" />
+  <!-- Before publishing, set Name/Publisher to the identity from Partner Center
+       (Store) or to the subject of the certificate you sign with (WinGet). -->
+
+  <Properties>
+    <DisplayName>Usage Dock for Claude Code</DisplayName>
+    <PublisherDisplayName>Usage Dock contributors</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19041.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="Usage Dock for Claude Code"
+        Description="Usage Dock for Claude Code"
+        BackgroundColor="transparent"
+        AppListEntry="none"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="ClaudeUsage.exe" Arguments="-RegisterProcessAsComServer" DisplayName="Usage Dock for Claude Code">
+              <com:Class Id="48C292C7-73DB-49F4-88AF-3017AB6ECC09" DisplayName="Usage Dock for Claude Code" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+        <uap5:Extension Category="windows.appExecutionAlias" Executable="ClaudeUsage.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap5:AppExecutionAlias>
+            <uap5:ExecutionAlias Alias="claude-usage-bridge.exe" />
+          </uap5:AppExecutionAlias>
+        </uap5:Extension>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.commandpalette"
+            Id="ClaudeUsageDock"
+            PublicFolder="Public"
+            DisplayName="Usage Dock for Claude Code"
+            Description="Shows your Claude Code 5-hour and weekly usage limits in the Command Palette Dock.">
+            <uap3:Properties>
+              <CmdPalProvider>
+                <Activation>
+                  <CreateInstance ClassId="48C292C7-73DB-49F4-88AF-3017AB6ECC09" />
+                </Activation>
+                <SupportedInterfaces>
+                  <Commands/>
+                </SupportedInterfaces>
+              </CmdPalProvider>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
