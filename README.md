@@ -29,18 +29,22 @@
 
 Requires Windows 10/11, [PowerToys](https://github.com/microsoft/PowerToys) with Command Palette and its Dock enabled, and Claude Code on a Claude Pro or Max plan.
 
+**[Get it from the Microsoft Store](https://apps.microsoft.com/detail/9NR3VBPN0XNM)**.
+
+After installing, open Command Palette and run **Connect Usage Dock to Claude Code**. Then right-click the Dock, choose **Edit**, and add the **Usage Dock for Claude Code** band.
+
+<details>
+<summary>Install from GitHub instead</summary>
+
 In PowerShell:
 
 ```powershell
 irm https://raw.githubusercontent.com/Arihant25/claude-usage-dock/main/install.ps1 | iex
 ```
 
-The script downloads the latest release for your CPU (x64 or ARM64), trusts its signing certificate (a single UAC prompt, because the package is self-signed), installs it, and offers to connect it to Claude Code.
+The script downloads the latest release for your CPU (x64 or ARM64), trusts its signing certificate (a single UAC prompt, because this build is self-signed), installs it, and offers to connect it to Claude Code. Or do it by hand:
 
-Then reload Command Palette, right-click the Dock, choose **Edit**, and add the **Usage Dock for Claude Code** band.
-
-<details>
-<summary>Manual install</summary>
+Install one or the other, not both: the Store and GitHub builds are separate apps that both provide `claude-usage-bridge.exe`.
 
 1. Download `ClaudeUsageDock_<version>_<x64|arm64>.msix` and `UsageDock.cer` from [Releases](https://github.com/Arihant25/claude-usage-dock/releases/latest).
 2. In an elevated PowerShell: `Import-Certificate -FilePath UsageDock.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople`
