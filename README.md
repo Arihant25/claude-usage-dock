@@ -42,9 +42,11 @@ In PowerShell:
 irm https://raw.githubusercontent.com/Arihant25/claude-usage-dock/main/install.ps1 | iex
 ```
 
-The script downloads the latest release for your CPU (x64 or ARM64), trusts its signing certificate (a single UAC prompt, because this build is self-signed), installs it, and offers to connect it to Claude Code. Or do it by hand:
+The script downloads the latest release for your CPU (x64 or ARM64), trusts its signing certificate (a single UAC prompt, because this build is self-signed), installs it, and offers to connect it to Claude Code.
 
 Install one or the other, not both: the Store and GitHub builds are separate apps that both provide `claude-usage-bridge.exe`.
+
+To install by hand:
 
 1. Download `ClaudeUsageDock_<version>_<x64|arm64>.msix` and `UsageDock.cer` from [Releases](https://github.com/Arihant25/claude-usage-dock/releases/latest).
 2. In an elevated PowerShell: `Import-Certificate -FilePath UsageDock.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople`
