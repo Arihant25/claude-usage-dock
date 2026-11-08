@@ -9,7 +9,15 @@ internal static class AppInfo
     public const string DisplayName = "Usage Dock for Claude Code";
 
     public const string ProviderId = "claudeusagedock";
-    public const string BandId = "claudeusagedock.band";
+    /// <summary>
+    /// Dock band ID. Command Palette resolves pinned bands by this ID alone, ignoring the provider,
+    /// so the Store and sideloaded builds use different IDs. Otherwise a pin left over from one
+    /// build makes Command Palette treat the other build's band as already pinned and hide it
+    /// from the Dock's Edit list.
+    /// </summary>
+    public static string BandId => s_bandId.Value;
+
+    private static readonly Lazy<string> s_bandId = new(() => IsStoreBuild() ? "claudeusagedock.band" : "claudeusagedock.sideloaded.band");
     public const string FiveHourItemId = "claudeusagedock.fivehour";
     public const string WeeklyItemId = "claudeusagedock.weekly";
     public const string DetailsId = "claudeusagedock.details";
@@ -43,4 +51,17 @@ internal static class AppInfo
     }
 
     public static string Glyph(int codepoint) => ((char)codepoint).ToString();
+
+    private static bool IsStoreBuild()
+    {
+        try
+        {
+            return Windows.ApplicationModel.Package.Current.SignatureKind == Windows.ApplicationModel.PackageSignatureKind.Store;
+        }
+        catch
+        {
+            return false; // not running with package identity
+        }
+    }
 }
+
