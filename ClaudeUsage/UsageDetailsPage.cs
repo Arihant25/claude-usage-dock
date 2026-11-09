@@ -28,9 +28,12 @@ internal sealed partial class UsageDetailsPage : ContentPage
             new CommandContextItem(new OpenUrlCommand("https://claude.ai/settings/usage")) { Title = "Open usage on claude.ai" },
             new CommandContextItem(new ConnectCommand(connect: false)) { Title = "Disconnect from Claude Code" },
         ];
-        _service.Changed += () => _form.Refresh();
+        _service.Changed += _form.Refresh;
         _form.Refresh();
     }
+
+    /// <summary>Stops live updates. Called when Command Palette has been handed a newer copy.</summary>
+    public void Detach() => _service.Changed -= _form.Refresh;
 
     public override IContent[] GetContent() => [_form];
 

@@ -86,15 +86,29 @@ internal sealed partial class ConnectCommand : InvokableCommand
 internal sealed partial class UsageItem : ListItem
 {
     private readonly UsageService _service;
+    private readonly UsageDetailsPage _page;
     private readonly bool _weekly;
 
     public UsageItem(UsageService service, bool weekly)
-        : base(new UsageDetailsPage(service, weekly ? AppInfo.WeeklyItemId : AppInfo.FiveHourItemId))
+        : this(service, weekly, new UsageDetailsPage(service, weekly ? AppInfo.WeeklyItemId : AppInfo.FiveHourItemId))
+    {
+    }
+
+    private UsageItem(UsageService service, bool weekly, UsageDetailsPage page)
+        : base(page)
     {
         _service = service;
+        _page = page;
         _weekly = weekly;
         Update();
         service.Changed += Update;
+    }
+
+    /// <summary>Stops live updates. Called when Command Palette has been handed a newer copy.</summary>
+    public void Detach()
+    {
+        _service.Changed -= Update;
+        _page.Detach();
     }
 
     private void Update()
@@ -123,22 +137,33 @@ internal sealed partial class UsageItem : ListItem
 public sealed partial class ClaudeUsageCommandsProvider : CommandProvider
 {
     private readonly UsageService _service = new();
-    private readonly ICommandItem[] _commands;
-    private readonly ICommandItem _band;
+    private readonly System.Threading.Lock _lock = new();
+    private UsageItem[] _bandItems = [];
+    private UsageDetailsPage? _detailsPage;
 
     public ClaudeUsageCommandsProvider()
     {
         Id = AppInfo.ProviderId;
         DisplayName = AppInfo.DisplayName;
         Icon = IconHelpers.FromRelativePath("Assets\\StoreLogo.png");
+    }
 
-        _band = new WrappedDockItem(
-            [new UsageItem(_service, weekly: false), new UsageItem(_service, weekly: true)],
-            AppInfo.BandId,
-            AppInfo.DisplayName);
+    // Command Palette asks for commands and bands each time it connects, and this process
+    // outlives Command Palette restarts. Each request gets fresh objects. With SDK
+    // 0.12.260812002, a property change goes to every subscriber in turn and stops at the
+    // first one that throws. A Command Palette instance that has exited would otherwise
+    // block updates to the running one. Fixed upstream in microsoft/PowerToys#50485.
+    public override ICommandItem[] TopLevelCommands()
+    {
+        var page = new UsageDetailsPage(_service, AppInfo.DetailsId);
+        lock (_lock)
+        {
+            _detailsPage?.Detach();
+            _detailsPage = page;
+        }
 
-        _commands = [
-            new CommandItem(new UsageDetailsPage(_service, AppInfo.DetailsId))
+        return [
+            new CommandItem(page)
             {
                 Title = "Claude Code usage",
                 Subtitle = "5-hour and weekly limits",
@@ -156,7 +181,19 @@ public sealed partial class ClaudeUsageCommandsProvider : CommandProvider
         ];
     }
 
-    public override ICommandItem[] TopLevelCommands() => _commands;
+    public override ICommandItem[]? GetDockBands()
+    {
+        UsageItem[] items = [new UsageItem(_service, weekly: false), new UsageItem(_service, weekly: true)];
+        lock (_lock)
+        {
+            foreach (var old in _bandItems)
+            {
+                old.Detach();
+            }
 
-    public override ICommandItem[]? GetDockBands() => [_band];
+            _bandItems = items;
+        }
+
+        return [new WrappedDockItem([.. items], AppInfo.BandId, AppInfo.DisplayName)];
+    }
 }
