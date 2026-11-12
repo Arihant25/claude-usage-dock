@@ -33,7 +33,10 @@ internal static class AppInfo
     /// Where the bridge drops the latest rate-limit snapshot. Deliberately outside AppData so
     /// MSIX file-system virtualization never hides it from tools outside the package.
     /// </summary>
-    public static string DataFile => Path.Combine(Home, ".claude-usage-dock", "usage.json");
+    public static string DataFile =>
+        Environment.GetEnvironmentVariable("USAGEDOCK_DATA_FILE") is { Length: > 0 } custom
+            ? custom
+            : Path.Combine(Home, ".claude-usage-dock", "usage.json");
 
     /// <summary>Claude Code's user settings, honoring CLAUDE_CONFIG_DIR.</summary>
     public static string ClaudeSettingsFile

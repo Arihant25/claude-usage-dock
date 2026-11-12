@@ -145,8 +145,11 @@ internal static class StatusLineBridge
     }
 
     /// <summary>
-    /// Within one window usage only goes up, and a later window has a later <c>resets_at</c>.
-    /// So the saved value wins if it belongs to a later window, or to the same window with more usage.
+    /// Within one window usage only goes up, so the saved value wins if it belongs to the same
+    /// window with more usage. A reading for a window that has already reset is a leftover from an
+    /// idle session, so the saved value wins over that too. Any other reading is taken, including
+    /// one whose window resets earlier than the saved one: that happens when the user switches
+    /// Claude accounts, and each account has its own windows.
     /// </summary>
     private static JsonElement PickNewer(JsonElement incoming, JsonElement existingLimits, string name)
     {
@@ -165,7 +168,7 @@ internal static class StatusLineBridge
         }
 
         // resets_at can jitter by a second between responses; treat that as the same window.
-        if (oldReset > inReset + 60)
+        if (oldReset > inReset + 60 && inReset <= DateTimeOffset.UtcNow.ToUnixTimeSeconds())
         {
             return old;
         }
