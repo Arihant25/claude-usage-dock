@@ -2,7 +2,7 @@
 
 _Last updated: November 7, 2026_
 
-Usage Dock for Claude Code does not collect, store, transmit or share any personal information.
+Usage Dock does not collect, store, transmit or share any personal information.
 
 ## What the extension reads and writes
 
@@ -26,4 +26,4 @@ Run **Disconnect Usage Dock from Claude Code** (or `claude-usage-bridge.exe --di
 
 ## Contact
 
-Open an issue at https://github.com/Arihant25/claude-usage-dock/issues.
+Open an issue at https://github.com/Arihant25/usage-dock/issues.

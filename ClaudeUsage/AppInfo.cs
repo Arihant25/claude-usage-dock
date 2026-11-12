@@ -6,7 +6,7 @@ namespace ClaudeUsage;
 /// <summary>Identifiers and well-known paths shared by the extension and the status line bridge.</summary>
 internal static class AppInfo
 {
-    public const string DisplayName = "Usage Dock for Claude Code";
+    public const string DisplayName = "Usage Dock";
 
     public const string ProviderId = "claudeusagedock";
     /// <summary>

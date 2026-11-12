@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-  Installs (or updates) Usage Dock for Claude Code from the latest GitHub release.
+  Installs (or updates) Usage Dock from the latest GitHub release.
 
 .DESCRIPTION
   Run from PowerShell:
-    irm https://raw.githubusercontent.com/Arihant25/claude-usage-dock/main/install.ps1 | iex
+    irm https://raw.githubusercontent.com/Arihant25/usage-dock/main/install.ps1 | iex
 
   1. Downloads the .msix for your CPU and the signing certificate.
   2. Trusts the certificate for app installs (one UAC prompt, first install only).
@@ -13,10 +13,10 @@
   4. Optionally connects it to Claude Code's status line.
 #>
 $ErrorActionPreference = 'Stop'
-$repo = 'Arihant25/claude-usage-dock'
+$repo = 'Arihant25/usage-dock'
 $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'x64' }
 
-Write-Host "Usage Dock for Claude Code installer ($arch)" -ForegroundColor Cyan
+Write-Host "Usage Dock installer ($arch)" -ForegroundColor Cyan
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $release = Invoke-RestMethod "https://api.github.com/repos/$repo/releases/latest" -Headers @{ 'User-Agent' = 'usage-dock-installer' }
 $msixAsset = $release.assets | Where-Object { $_.name -like "*_$arch.msix" } | Select-Object -First 1
@@ -50,5 +50,5 @@ if ($answer -notmatch '^[nN]') {
 
 Write-Host ''
 Write-Host 'Next: open Command Palette, reload it (or restart PowerToys), then right-click the Dock,'
-Write-Host 'choose Edit and add the "Usage Dock for Claude Code" band.'
+Write-Host 'choose Edit and add the "Usage Dock" band.'
 Write-Host 'To uninstall later, run "claude-usage-bridge.exe --disconnect" first.'

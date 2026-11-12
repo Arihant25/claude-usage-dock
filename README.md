@@ -2,7 +2,7 @@
   <img src="docs/brand/logo-512.png" width="96" alt="Usage Dock logo">
 </p>
 
-<h1 align="center">Usage Dock for Claude Code</h1>
+<h1 align="center">Usage Dock</h1>
 
 <p align="center">
   Your Claude Code 5-hour and weekly usage limits, always visible in the PowerToys Command Palette Dock.
@@ -31,7 +31,7 @@ Requires Windows 10/11, [PowerToys](https://github.com/microsoft/PowerToys) with
 
 **[Get it from the Microsoft Store](https://apps.microsoft.com/detail/9NR3VBPN0XNM)**.
 
-After installing, open Command Palette and run **Connect Usage Dock to Claude Code**. Then right-click the Dock, choose **Edit**, and add the **Usage Dock for Claude Code** band.
+After installing, open Command Palette and run **Connect Usage Dock to Claude Code**. Then right-click the Dock, choose **Edit**, and add the **Usage Dock** band.
 
 <details>
 <summary>Install from GitHub instead</summary>
@@ -39,7 +39,7 @@ After installing, open Command Palette and run **Connect Usage Dock to Claude Co
 In PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/Arihant25/claude-usage-dock/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Arihant25/usage-dock/main/install.ps1 | iex
 ```
 
 The script downloads the latest release for your CPU (x64 or ARM64), trusts its signing certificate (a single UAC prompt, because this build is self-signed), installs it, and offers to connect it to Claude Code.
@@ -48,7 +48,7 @@ Install one or the other, not both: the Store and GitHub builds are separate app
 
 To install by hand:
 
-1. Download `ClaudeUsageDock_<version>_<x64|arm64>.msix` and `UsageDock.cer` from [Releases](https://github.com/Arihant25/claude-usage-dock/releases/latest).
+1. Download `ClaudeUsageDock_<version>_<x64|arm64>.msix` and `UsageDock.cer` from [Releases](https://github.com/Arihant25/usage-dock/releases/latest).
 2. In an elevated PowerShell: `Import-Certificate -FilePath UsageDock.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople`
 3. Double-click the `.msix`, or run `Add-AppxPackage <file>.msix`.
 4. Open Command Palette and run **Connect Usage Dock to Claude Code**, or run `claude-usage-bridge.exe --connect`.
